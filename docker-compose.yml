@@ -1,0 +1,42 @@
+
+services:
+  # Backend Service
+  amarjeet-api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: amarjeet001/amarjeet-node-backend:v1
+    container_name: node-api-amarjeet
+    ports:
+      - "8086:5000" # Map host port 8086 to container port 5000
+    networks:
+      - amarjeet-fullstack-net
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules # Anonymous volume to protect node_modules
+
+  # Frontend Service
+  amarjeet-web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: amarjeet001/amarjeet-react-frontend:v1
+    container_name: react-web-amarjeet
+    ports:
+      - "8085:80" # Map host port 8085 to container port 80 (Nginx)
+    networks:
+      - amarjeet-fullstack-net
+    depends_on:
+      - amarjeet-api
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
+
+# Networks define karna
+networks:
+  amarjeet-fullstack-net:
+    driver: bridge
+
+# Volumes define karna (agar database hota toh yahan storage banti)
+volumes:
+  node_data:
