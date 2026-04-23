@@ -2,7 +2,7 @@ const sonarqubeScanner = require('sonarqube-scanner').default;
 
 sonarqubeScanner(
   {
-    serverUrl: 'http://localhost:9000',
+    serverUrl: 'http://host.docker.internal:9000',
     options: {
       'sonar.projectKey': 'amarjeet-node-project',
       'sonar.projectName': 'Amarjeet Node Project',
