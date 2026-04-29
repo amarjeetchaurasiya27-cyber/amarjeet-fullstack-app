@@ -8,7 +8,7 @@ sonarqubeScanner(
       'sonar.projectKey': 'amarjeet-node-project',
       'sonar.projectName': 'Amarjeet Node Project',
       'sonar.sources': '.',
-      'sonar.token': 'squ_3ab001afad8417203a6b35f7eee4d431386ec209', // 'login' ki jagah 'token' use karein
+      'sonar.token': 'squ_b99fd2c51889eb49e49a04e0ccd2a81d5fbaaf06', // 'login' ki jagah 'token' use karein
     },
   },
   () => {
