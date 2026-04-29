@@ -8,7 +8,7 @@ sonarqubeScanner(
       'sonar.projectName': 'Amarjeet React Frontend',
       'sonar.projectDescription': 'Frontend quality check for Amarjeet React App',
       'sonar.sources': 'src',
-      'sonar.token': 'squ_3ab001afad8417203a6b35f7eee4d431386ec209', // Master Token
+      'sonar.token': 'squ_b99fd2c51889eb49e49a04e0ccd2a81d5fbaaf06', // Master Token
       'sonar.javascript.lcov.reportPaths': 'coverage/lcov.info',
       'sonar.sourceEncoding': 'UTF-8',
     },
