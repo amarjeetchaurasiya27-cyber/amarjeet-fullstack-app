@@ -1,23 +1,23 @@
 # 1. Base image
 FROM node:18-alpine
 
-# Security Fix: Create app directory and give permission to 'node' user
+# 2. Folder banayein aur permission set karein
 RUN mkdir -p /app && chown -R node:node /app
 
-# 2. Container ke andar folder banaiye
+# 3. Work directory set karein
 WORKDIR /app
 
-# 3. Pehle package files copy kijiye
-COPY package*.json ./
+# 4. Files copy karte waqt hi 'node' user ko malik banayein (THE FIX)
+COPY --chown=node:node package*.json ./
 
-# Security Fix: Switch to non-root user before install/copy
+# 5. User switch karein
 USER node
 
-# 4. Saari libraries install kijiye
+# 6. Ab install makkhan ki tarah chalega
 RUN npm install
 
-# 5. Baaki saara code copy kijiye
+# 7. Baaki code bhi owner banakar copy karein
 COPY --chown=node:node . .
 
-# 6. App start kijiye
+# 8. Start the app
 CMD ["node", "index.js"]
