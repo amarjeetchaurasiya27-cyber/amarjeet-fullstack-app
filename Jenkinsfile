@@ -9,7 +9,7 @@ pipeline {
         DOCKER_USER = 'amarjeet001'
         BACKEND_IMAGE = "amarjeet001/amarjeet-node-backend:v1"
         FRONTEND_IMAGE = "amarjeet001/amarjeet-react-frontend:v1"
-        // Hack: Windows Jenkins ko batana padta hai ki Docker pipe kahan hai
+        // Windows Docker Pipe Path
         DOCKER_HOST = "npipe:////./pipe/docker_engine"
     }
 
@@ -20,7 +20,6 @@ pipeline {
                     steps { 
                         dir('backend') { 
                             bat 'npm install'
-                            // Error handling: Agar scan fail ho toh pipeline na ruke
                             bat 'node sonar-project.js || exit 0' 
                         } 
                     }
@@ -38,8 +37,13 @@ pipeline {
 
         stage('Step 2: Docker Build & Tagging') {
             steps {
-                echo 'Building precise images for Amarjeet...'
-                // Build se pehle purani images clean karna achhi aadat hai
+                echo 'Docker Hub authentication for Amarjeet...'
+                // Build shuru hone se pehle hi login karna zaroori hai
+                withCredentials([string(credentialsId: 'dockerhub-creds', variable: 'DOCKER_PASSWORD')]) {
+                    bat "echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USER% --password-stdin"
+                }
+                
+                echo 'Building precise images...'
                 bat "docker build -t %BACKEND_IMAGE% ./backend"
                 bat "docker build -t %FRONTEND_IMAGE% ./frontend"
             }
@@ -47,11 +51,8 @@ pipeline {
 
         stage('Step 3: Docker Hub Push') {
             steps {
-                echo "Pushing to Docker Hub account: %DOCKER_USER%"
-                // MATCHED: Aapke screenshot wala ID 'dockerhub-creds'
-                withCredentials([string(credentialsId: 'dockerhub-creds', variable: 'DOCKER_PASSWORD')]) {
-                    bat "echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USER% --password-stdin"
-                }
+                echo "Pushing images to account: %DOCKER_USER%"
+                // Pehle hi login ho chuka hai, ab sirf push karna hai
                 bat "docker push %BACKEND_IMAGE%"
                 bat "docker push %FRONTEND_IMAGE%"
             }
@@ -59,7 +60,7 @@ pipeline {
 
         stage('Step 4: Clean & Deploy') {
             steps {
-                echo 'Cleaning old containers and deploying...'
+                echo 'Cleaning old containers and deploying on 8085/8086...'
                 bat "docker rm -f node-api-amarjeet react-web-amarjeet || exit 0"
                 bat "docker run -d --name node-api-amarjeet -p 8086:5000 %BACKEND_IMAGE%"
                 bat "docker run -d --name react-web-amarjeet -p 8085:80 %FRONTEND_IMAGE%"
