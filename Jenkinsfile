@@ -48,7 +48,7 @@ pipeline {
             steps {
                 echo "Pushing to Docker Hub account: %DOCKER_USER%"
                 // CredentialsId wahi hona chahiye jo Jenkins mein hai
-                withCredentials([string(credentialsId: 'docker-creds', variable: 'DOCKER_PASSWORD')]) {
+                withCredentials([string(credentialsId: 'dockerhub-creds', variable: 'DOCKER_PASSWORD')]) {
                     // Windows par echo piping aise hoti hai
                     bat "echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USER% --password-stdin"
                 }
