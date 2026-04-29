@@ -38,9 +38,12 @@ pipeline {
         stage('Step 2: Docker Build & Tagging') {
             steps {
                 echo 'Docker Hub authentication for Amarjeet...'
-                // Build shuru hone se pehle hi login karna zaroori hai
-                withCredentials([string(credentialsId: 'dockerhub-creds', variable: 'DOCKER_PASSWORD')]) {
-                    bat "echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USER% --password-stdin"
+                // 'string' ki jagah 'usernamePassword' use karein
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', 
+                                  usernameVariable: 'DOCKER_USER_VAR', 
+                                  passwordVariable: 'DOCKER_PASSWORD')]) {
+                    
+                    bat "echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USER_VAR% --password-stdin"
                 }
                 
                 echo 'Building precise images...'
